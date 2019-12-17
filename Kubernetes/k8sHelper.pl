@@ -18,13 +18,20 @@ sub declarativeText {
    say "Declarative $_ example:";
    print color('reset');
 }
+sub createDescription {
+    print color('bold blue');
+    say "Imperative @_[0] example:";
+    print color('reset');
+    say @_[1];
+    print color('bold yellow');
+    say "Declarative $_ example:";
+    print color('reset');
+    say @_[2];
+}
 
 given ($object) {
    when ($_ eq "pod") {
-       imperativeText($_);
-       say "kubectl run --generator=run-pod/v1 nginx-pod --image=nginx:alpine\n";
-       declarativeText($_);
-       say "apiVersion: v1 \nkind: Pod \nmetadata:\n  name: nginx-pod\nspec:\n  containers:\n  - name: nginx-container\n    image: nginx:alpine\n";
+       createDescription($_, "kubectl run --generator=run-pod/v1 nginx-pod --image=nginx:alpine\n", "apiVersion: v1 \nkind: Pod \nmetadata:\n  name: nginx-pod\nspec:\n  containers:\n  - name: nginx-container\n    image: nginx:alpine\n" );
    }
    when ($_ eq "service") {
        imperativeText($_);
