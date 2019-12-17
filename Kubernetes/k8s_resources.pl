@@ -10,5 +10,6 @@ foreach $resource (@resources)
   print "############################################################################\n";
   print "Getting resources of type: " . uc($resource) . "\n   -with command: $command";
   system($command);
+  print "\n";
   print "############################################################################\n\n\n\n\n";
 }
