@@ -8,7 +8,7 @@ foreach $resource (@resources)
 {
   my $command = 'kubectl get ' . $resource . ' --all-namespaces';
   print "############################################################################\n";
-  print "Getting resources of type: " . uc($resource) . "\n\s\s -with command: $command";
+  print "Getting resources of type: " . uc($resource) . "\n   -with command: $command";
   system($command);
   print "############################################################################\n\n\n\n\n";
 }
