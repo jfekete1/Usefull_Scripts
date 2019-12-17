@@ -30,7 +30,7 @@ given ($object) {
        imperativeText($_);
        say "kubectl expose pod redis --port=6379 --name redis-service";
        declarativeText($_);
-       say "apiVersion: v1\nkind: Service\nmetadata:\n  labels:\n    run: redis\n  name: redis-service\n  namespace: default\n  resourceVersion: "1659"\n  selfLink: /api/v1/namespaces/default/services/redis-service\nspec:\n  clusterIP: 10.97.241.191\n  ports:\n  - port: 6379\n    protocol: TCP\n    targetPort: 6379\n  selector:\n    run: redis\n  sessionAffinity: None\n  type: ClusterIP\n";
+       say "apiVersion: v1\nkind: Service\nmetadata:\n  labels:\n    run: redis\n  name: redis-service\n  namespace: default\n  resourceVersion: \"1659\"\n  selfLink: /api/v1/namespaces/default/services/redis-service\nspec:\n  clusterIP: 10.97.241.191\n  ports:\n  - port: 6379\n    protocol: TCP\n    targetPort: 6379\n  selector:\n    run: redis\n  sessionAffinity: None\n  type: ClusterIP\n";
    }
    default {
        print color('bold red');
