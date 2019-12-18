@@ -53,13 +53,13 @@ given ($object) {
    when ($_ eq "clusterrolebinding" || $_ eq "clusterrolebindings"){
        createDescription($_, "kubectl create clusterrolebinding <cluster-role-binding-name>", "apiVersion: rbac.authorization.k8s.io/v1\nkind: ClusterRoleBinding\nmetadata:\n  name: read-secrets-global\nsubjects:\n- kind: Group\n  name: manager # Name is case sensitive\n  apiGroup: rbac.authorization.k8s.io\nroleRef:\n  kind: ClusterRole\n  name: secret-reader\n  apiGroup: rbac.authorization.k8s.io");
    }
-   when ($_ eq "configmap" || $_ eq "configmaps" || eq "cm"){
+   when ($_ eq "configmap" || $_ eq "configmaps" || $_ eq "cm"){
        createDescription($_, "kubectl create configmap <configmap-name>", "apiVersion: v1\nkind: ConfigMap\nmetadata:\n  creationTimestamp: 2016-02-18T18:52:05Z\n  name: game-config\n  namespace: default\n  resourceVersion: \"516\"\n  uid: b4952dc3-d670-11e5-8cd0-68f728db1985\ndata:\n  game.properties: |\n    enemies=aliens\n    lives=3\n    enemies.cheat=true\n    enemies.cheat.level=noGoodRotten\n    secret.code.passphrase=UUDDLRLRBABAS\n    secret.code.allowed=true\n    secret.code.lives=30\n  ui.properties: |\n    color.good=purple\n    color.bad=yellow\n    allow.textmode=true\n    how.nice.to.look=fairlyNice");
    }
    when ($_ eq "job" || $_ eq "jobs"){
        createDescription($_, "kubectl create job <job-name>", "apiVersion: batch/v1\nkind: Job\nmetadata:\n  name: pi\nspec:\n  template:\n    spec:\n      containers:\n      - name: pi\n        image: perl\n        command: [\"perl\",  \"-Mbignum=bpi\", \"-wle\", \"print bpi(2000)\"]\n      restartPolicy: Never\n  backoffLimit: 4");
    }
-   when ($_ eq "poddisruptionbudget" || $_ eq "poddisruptionbudgets" || eq "pdb"){
+   when ($_ eq "poddisruptionbudget" || $_ eq "poddisruptionbudgets" || $_ eq "pdb"){
        createDescription($_, "kubectl create poddisruptionbudget NAME --selector=nginx --min-available=0", "apiVersion: policy/v1beta1\nkind: PodDisruptionBudget\nmetadata:\n  creationTimestamp: 2019-12-18T09:55:09Z\n  generation: 1\n  name: NAME\n  namespace: myproject\n  resourceVersion: \"705557\"\n  selfLink: /apis/policy/v1beta1/namespaces/myproject/poddisruptionbudgets/NAME\n  uid: 79d9a04e-217c-11ea-b368-5226a92a570c\nspec:\n  minAvailable: 0\n  selector:\n    matchExpressions:\n    - key: nginx\n      operator: Exists\nstatus:\n  currentHealthy: 0\n  desiredHealthy: 0\n  disruptedPods: null\n  disruptionsAllowed: 0\n  expectedPods: 0\n  observedGeneration: 1");
    }
    when ($_ eq "priorityclass" || $_ eq "priorityclasses" || eq "pc"){
@@ -99,13 +99,13 @@ given ($object) {
        createDescription($_, "kubectl taint node node01 \'app_type=alpha:NoSchedule\'", "");
    }
    when ($_ eq "explain" || $_ eq "help"){
-       say "kubectl explain ingress --recursive | less";
-       say "kubectl explain ingress --recursive | grep -i rules -A10";
+       say "kubectl explain ingress --recursive \| less";
+       say "kubectl explain ingress --recursive \| grep -i rules -A10";
    }
    default {
        sayColor('bold red', "No information on object $_ !!");
        print "Use the command: ";
        sayColor('bold green', "kubectl api-resources ");
-       say "To list all the possible resource types, and copy the NAME of the resource you want information on, to create that resource type."
+       say "To list all the possible resource types, and copy the NAME of the resource you want information on, to create that resource type.";
    }
 }
