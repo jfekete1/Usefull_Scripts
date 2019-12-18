@@ -62,7 +62,7 @@ given ($object) {
    when ($_ eq "poddisruptionbudget" || $_ eq "poddisruptionbudgets" || $_ eq "pdb"){
        createDescription($_, "kubectl create poddisruptionbudget NAME --selector=nginx --min-available=0", "apiVersion: policy/v1beta1\nkind: PodDisruptionBudget\nmetadata:\n  creationTimestamp: 2019-12-18T09:55:09Z\n  generation: 1\n  name: NAME\n  namespace: myproject\n  resourceVersion: \"705557\"\n  selfLink: /apis/policy/v1beta1/namespaces/myproject/poddisruptionbudgets/NAME\n  uid: 79d9a04e-217c-11ea-b368-5226a92a570c\nspec:\n  minAvailable: 0\n  selector:\n    matchExpressions:\n    - key: nginx\n      operator: Exists\nstatus:\n  currentHealthy: 0\n  desiredHealthy: 0\n  disruptedPods: null\n  disruptionsAllowed: 0\n  expectedPods: 0\n  observedGeneration: 1");
    }
-   when ($_ eq "priorityclass" || $_ eq "priorityclasses" || eq "pc"){
+   when ($_ eq "priorityclass" || $_ eq "priorityclasses" || $_ eq "pc"){
        createDescription($_, "kubectl create priorityclass <priorityclass-name>", "apiVersion: scheduling.k8s.io/v1\nkind: PriorityClass\nmetadata:\n  name: high-priority\nvalue: 1000000\nglobalDefault: false\ndescription: asdasd");
    }
    when ($_ eq "quota" || $_ eq "resourcequotas"){
@@ -80,7 +80,7 @@ given ($object) {
        say "echo -n \'YWRtaW4=\' | base64 --decode";
        createDescription($_, "kubectl create secret mysecret", "apiVersion: v1\nkind: Secret\nmetadata:\n  name: mysecret\ntype: Opaque\ndata:\n  username: YWRtaW4=\n  password: MWYyZDFlMmU2N2Rm");
    }
-   when ($_ eq "serviceaccount" || $_ eq "serviceaccounts" || eq "sa"){
+   when ($_ eq "serviceaccount" || $_ eq "serviceaccounts" || $_ eq "sa"){
        createDescription($_, "kubectl create serviceaccount <service-account-name>", "apiVersion: v1\nkind: ServiceAccount\nmetadata:\n  creationTimestamp: 2015-08-07T22:02:39Z\n  name: default\n  namespace: default\n  uid: 052fb0f4-3d50-11e5-b066-42010af0d7b6\nsecrets:\n- name: default-token-uudge\nimagePullSecrets:\n- name: myregistrykey");
    }
    when ($_ eq "networkpolicy" || $_ eq "networkpolicies" || $_ eq "netpol"){
@@ -99,8 +99,8 @@ given ($object) {
        createDescription($_, "kubectl taint node node01 \'app_type=alpha:NoSchedule\'", "");
    }
    when ($_ eq "explain" || $_ eq "help"){
-       say "kubectl explain ingress --recursive \| less";
-       say "kubectl explain ingress --recursive \| grep -i rules -A10";
+       say "kubectl explain ingress --recursive | less";
+       say "kubectl explain ingress --recursive | grep -i rules -A10";
    }
    default {
        sayColor('bold red', "No information on object $_ !!");
