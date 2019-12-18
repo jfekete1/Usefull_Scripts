@@ -60,7 +60,7 @@ given ($object) {
        createDescription($_, "kubectl create job <job-name>", "apiVersion: batch/v1\nkind: Job\nmetadata:\n  name: pi\nspec:\n  template:\n    spec:\n      containers:\n      - name: pi\n        image: perl\n        command: [\"perl\",  \"-Mbignum=bpi\", \"-wle\", \"print bpi(2000)\"]\n      restartPolicy: Never\n  backoffLimit: 4");
    }
    when ($_ eq "poddisruptionbudget" || $_ eq "poddisruptionbudgets"){
-       createDescription($_, "kubectl create poddisruptionbudget <budget-name>", "");
+       createDescription($_, "kubectl create poddisruptionbudget NAME --selector=nginx --min-available=0", "apiVersion: policy/v1beta1\nkind: PodDisruptionBudget\nmetadata:\n  creationTimestamp: 2019-12-18T09:55:09Z\n  generation: 1\n  name: NAME\n  namespace: myproject\n  resourceVersion: \"705557\"\n  selfLink: /apis/policy/v1beta1/namespaces/myproject/poddisruptionbudgets/NAME\n  uid: 79d9a04e-217c-11ea-b368-5226a92a570c\nspec:\n  minAvailable: 0\n  selector:\n    matchExpressions:\n    - key: nginx\n      operator: Exists\nstatus:\n  currentHealthy: 0\n  desiredHealthy: 0\n  disruptedPods: null\n  disruptionsAllowed: 0\n  expectedPods: 0\n  observedGeneration: 1");
    }
    when ($_ eq "priorityclass" || $_ eq "priorityclasses"){
        createDescription($_, "kubectl create priorityclass <priorityclass-name>", "apiVersion: scheduling.k8s.io/v1\nkind: PriorityClass\nmetadata:\n  name: high-priority\nvalue: 1000000\nglobalDefault: false\ndescription: asdasd");
@@ -78,13 +78,22 @@ given ($object) {
        sayColor('bold red', "Encode text before creating secret:");
        say "echo -n \'textToEncode\' | base64";
        say "echo -n \'YWRtaW4=\' | base64 --decode";
-       createDescription($_, "kubectl create secret", "apiVersion: v1\nkind: Secret\nmetadata:\n  name: mysecret\ntype: Opaque\ndata:\n  username: YWRtaW4=\n  password: MWYyZDFlMmU2N2Rm");
+       createDescription($_, "kubectl create secret mysecret", "apiVersion: v1\nkind: Secret\nmetadata:\n  name: mysecret\ntype: Opaque\ndata:\n  username: YWRtaW4=\n  password: MWYyZDFlMmU2N2Rm");
    }
    when ($_ eq "serviceaccount" || $_ eq "serviceaccounts"){
        createDescription($_, "kubectl create serviceaccount <service-account-name>", "apiVersion: v1\nkind: ServiceAccount\nmetadata:\n  creationTimestamp: 2015-08-07T22:02:39Z\n  name: default\n  namespace: default\n  uid: 052fb0f4-3d50-11e5-b066-42010af0d7b6\nsecrets:\n- name: default-token-uudge\nimagePullSecrets:\n- name: myregistrykey");
    }
    when ($_ eq "networkpolicy" || $_ eq "networkpolicies"){
        createDescription($_, "kubectl create -f tmp.yml", "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: test-network-policy\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      role: db\n  policyTypes:\n  - Ingress\n  - Egress\n  ingress:\n  - from:\n    - ipBlock:\n        cidr: 172.17.0.0/16\n        except:\n        - 172.17.1.0/24\n    - namespaceSelector:\n        matchLabels:\n          project: myproject\n    - podSelector:\n        matchLabels:\n          role: frontend\n    ports:\n    - protocol: TCP\n      port: 6379\n  egress:\n  - to:\n    - ipBlock:\n        cidr: 10.0.0.0/24\n    ports:\n    - protocol: TCP\n      port: 5978");
+   }
+   when ($_ eq "persistentvolume" || $_ eq "persistentvolumes"){
+       createDescription($_, "No imperative command available for this resource type !!", "# Create PersistentVolume\n# You can put multiple definitions in one file. change the ip of NFS server\napiVersion: v1\nkind: PersistentVolume\nmetadata:\n  name: wordpress-persistent-storage\n  labels:\n    app: wordpress\n    tier: frontend\nspec:\n  capacity:\n    storage: 1Gi\n  accessModes:\n    - ReadWriteMany\n  nfs:\n    server: nfs01\n    # Exported path of your NFS server\n    path: \"/html\"\n\n---\napiVersion: v1\nkind: PersistentVolume\nmetadata:\n  name: mysql-persistent-storage\n  labels:\n    app: wordpress\n    tier: mysql\nspec:\n  capacity:\n    storage: 1Gi\n  accessModes:\n    - ReadWriteMany\n  nfs:\n    server: nfs01\n    # Exported path of your NFS server\n    path: \"/mysql\"");
+   }
+   when ($_ eq "persistentvolumeclaim" || $_ eq "persistentvolumeclaims"){
+       createDescription($_, "No imperative command available for this resource type !!", "apiVersion: v1\nkind: PersistentVolumeClaim\nmetadata:\n  name: mysql-persistent-storage\n  labels:\n    app: wordpress\nspec:\n  accessModes:\n    - ReadWriteMany\n  resources:\n    requests:\n      storage: 1Gi\n  volumeName: \"mysql-persistent-storage\"");
+   }
+   when ($_ eq "endpoint" || $_ eq "endpoints"){
+       createDescription($_, "No imperative command available for this resource type !!", "");
    }
    default {
        sayColor('bold red', "No information on object $_ !!");
