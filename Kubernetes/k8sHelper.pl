@@ -92,7 +92,7 @@ given ($object) {
    when ($_ eq "persistentvolumeclaim" || $_ eq "persistentvolumeclaims" || $_ eq "pvc"){
        createDescription($_, "No imperative command available for this resource type !!", "apiVersion: v1\nkind: PersistentVolumeClaim\nmetadata:\n  name: mysql-persistent-storage\n  labels:\n    app: wordpress\nspec:\n  accessModes:\n    - ReadWriteMany\n  resources:\n    requests:\n      storage: 1Gi\n  volumeName: \"mysql-persistent-storage\"");
    }
-   when ($_ eq "endpoint" || $_ eq "endpoints" || eq "ep"){
+   when ($_ eq "endpoint" || $_ eq "endpoints" || $_ eq "ep"){
        createDescription($_, "No imperative command available for this resource type !!", "");
    }
    when ($_ eq "taint" || $_ eq "taints"){
