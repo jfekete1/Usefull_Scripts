@@ -95,6 +95,13 @@ given ($object) {
    when ($_ eq "endpoint" || $_ eq "endpoints" || eq "ep"){
        createDescription($_, "No imperative command available for this resource type !!", "");
    }
+   when ($_ eq "taint" || $_ eq "taints"){
+       createDescription($_, "kubectl taint node node01 \'app_type=alpha:NoSchedule\'", "");
+   }
+   when ($_ eq "explain" || $_ eq "help"){
+       say "kubectl explain ingress --recursive | less";
+       say "kubectl explain ingress --recursive | grep -i rules -A10";
+   }
    default {
        sayColor('bold red', "No information on object $_ !!");
        print "Use the command: ";
