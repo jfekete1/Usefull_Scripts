@@ -48,31 +48,31 @@ given ($object) {
        createDescription($_, "kubectl create -f replicaset.yml", "apiVersion: apps/v1\nkind: ReplicaSet\nmetadata:\n  name: frontend\n  labels:\n    app: guestbook\n    tier: frontend\nspec:\n  # modify replicas according to your case\n  replicas: 3\n  selector:\n    matchLabels:\n      tier: frontend\n  template:\n    metadata:\n      labels:\n        tier: frontend\n    spec:\n      containers:\n      - name: php-redis\n        image: gcr.io/google_samples/gb-frontend:v3");
    }
    when ($_ eq "clusterrole" || $_ eq "clusterroles") {
-       createDescription($_, "kubectl create clusterrole", "apiVersion: rbac.authorization.k8s.io/v1\nkind: ClusterRole\nmetadata:\n  name: secret-reader\nrules:\n- apiGroups: [\"\"]\n  resources: [\"secrets\"]\n  verbs: [\"get\", \"watch\", \"list\"]");
+       createDescription($_, "kubectl create clusterrole <cluster-role-name>", "apiVersion: rbac.authorization.k8s.io/v1\nkind: ClusterRole\nmetadata:\n  name: secret-reader\nrules:\n- apiGroups: [\"\"]\n  resources: [\"secrets\"]\n  verbs: [\"get\", \"watch\", \"list\"]");
    }
    when ($_ eq "clusterrolebinding" || $_ eq "clusterrolebindings"){
-       createDescription($_, "kubectl create clusterrolebinding", "apiVersion: rbac.authorization.k8s.io/v1\nkind: ClusterRoleBinding\nmetadata:\n  name: read-secrets-global\nsubjects:\n- kind: Group\n  name: manager # Name is case sensitive\n  apiGroup: rbac.authorization.k8s.io\nroleRef:\n  kind: ClusterRole\n  name: secret-reader\n  apiGroup: rbac.authorization.k8s.io");
+       createDescription($_, "kubectl create clusterrolebinding <cluster-role-binding-name>", "apiVersion: rbac.authorization.k8s.io/v1\nkind: ClusterRoleBinding\nmetadata:\n  name: read-secrets-global\nsubjects:\n- kind: Group\n  name: manager # Name is case sensitive\n  apiGroup: rbac.authorization.k8s.io\nroleRef:\n  kind: ClusterRole\n  name: secret-reader\n  apiGroup: rbac.authorization.k8s.io");
    }
    when ($_ eq "configmap" || $_ eq "configmaps"){
-       createDescription($_, "kubectl create configmap", "apiVersion: v1\nkind: ConfigMap\nmetadata:\n  creationTimestamp: 2016-02-18T18:52:05Z\n  name: game-config\n  namespace: default\n  resourceVersion: \"516\"\n  uid: b4952dc3-d670-11e5-8cd0-68f728db1985\ndata:\n  game.properties: |\n    enemies=aliens\n    lives=3\n    enemies.cheat=true\n    enemies.cheat.level=noGoodRotten\n    secret.code.passphrase=UUDDLRLRBABAS\n    secret.code.allowed=true\n    secret.code.lives=30\n  ui.properties: |\n    color.good=purple\n    color.bad=yellow\n    allow.textmode=true\n    how.nice.to.look=fairlyNice");
+       createDescription($_, "kubectl create configmap <configmap-name>", "apiVersion: v1\nkind: ConfigMap\nmetadata:\n  creationTimestamp: 2016-02-18T18:52:05Z\n  name: game-config\n  namespace: default\n  resourceVersion: \"516\"\n  uid: b4952dc3-d670-11e5-8cd0-68f728db1985\ndata:\n  game.properties: |\n    enemies=aliens\n    lives=3\n    enemies.cheat=true\n    enemies.cheat.level=noGoodRotten\n    secret.code.passphrase=UUDDLRLRBABAS\n    secret.code.allowed=true\n    secret.code.lives=30\n  ui.properties: |\n    color.good=purple\n    color.bad=yellow\n    allow.textmode=true\n    how.nice.to.look=fairlyNice");
    }
    when ($_ eq "job" || $_ eq "jobs"){
-       createDescription($_, "kubectl create job", "apiVersion: batch/v1\nkind: Job\nmetadata:\n  name: pi\nspec:\n  template:\n    spec:\n      containers:\n      - name: pi\n        image: perl\n        command: [\"perl\",  \"-Mbignum=bpi\", \"-wle\", \"print bpi(2000)\"]\n      restartPolicy: Never\n  backoffLimit: 4");
+       createDescription($_, "kubectl create job <job-name>", "apiVersion: batch/v1\nkind: Job\nmetadata:\n  name: pi\nspec:\n  template:\n    spec:\n      containers:\n      - name: pi\n        image: perl\n        command: [\"perl\",  \"-Mbignum=bpi\", \"-wle\", \"print bpi(2000)\"]\n      restartPolicy: Never\n  backoffLimit: 4");
    }
    when ($_ eq "poddisruptionbudget" || $_ eq "poddisruptionbudgets"){
-       createDescription($_, "kubectl create poddisruptionbudget", "");
+       createDescription($_, "kubectl create poddisruptionbudget <budget-name>", "");
    }
    when ($_ eq "priorityclass" || $_ eq "priorityclasses"){
-       createDescription($_, "kubectl create priorityclass", "apiVersion: scheduling.k8s.io/v1\nkind: PriorityClass\nmetadata:\n  name: high-priority\nvalue: 1000000\nglobalDefault: false\ndescription: asdasd");
+       createDescription($_, "kubectl create priorityclass <priorityclass-name>", "apiVersion: scheduling.k8s.io/v1\nkind: PriorityClass\nmetadata:\n  name: high-priority\nvalue: 1000000\nglobalDefault: false\ndescription: asdasd");
    }
    when ($_ eq "quota" || $_ eq "quotas"){
-       createDescription($_, "kubectl create quota", "apiVersion: v1\nkind: ResourceQuota\nmetadata:\n  name: compute-resources\nspec:\n  hard:\n    requests.cpu: \"1\"\n    requests.memory: 1Gi\n    limits.cpu: \"2\"\n    limits.memory: 2Gi\n    requests.nvidia.com/gpu: 4");
+       createDescription($_, "kubectl create quota <quota-name>", "apiVersion: v1\nkind: ResourceQuota\nmetadata:\n  name: compute-resources\nspec:\n  hard:\n    requests.cpu: \"1\"\n    requests.memory: 1Gi\n    limits.cpu: \"2\"\n    limits.memory: 2Gi\n    requests.nvidia.com/gpu: 4");
    }
    when ($_ eq "role" || $_ eq "roles"){
-       createDescription($_, "kubectl create role", "apiVersion: rbac.authorization.k8s.io/v1\nkind: Role\nmetadata:\n  namespace: default\n  name: pod-reader\nrules:\n- apiGroups: [\"\"]\n  resources: [\"pods\"]\n  verbs: [\"get\", \"watch\", \"list\"]");
+       createDescription($_, "kubectl create role <role-name>", "apiVersion: rbac.authorization.k8s.io/v1\nkind: Role\nmetadata:\n  namespace: default\n  name: pod-reader\nrules:\n- apiGroups: [\"\"]\n  resources: [\"pods\"]\n  verbs: [\"get\", \"watch\", \"list\"]");
    }
    when ($_ eq "rolebinding" || $_ eq "rolebindings"){
-       createDescription($_, "kubectl create rolebinding", "apiVersion: rbac.authorization.k8s.io/v1\nkind: RoleBinding\nmetadata:\n  name: read-pods\n  namespace: default\nsubjects:\n- kind: User\n  name: jane # Name is case sensitive\n  apiGroup: rbac.authorization.k8s.io\nroleRef:\n  kind: Role #this must be Role or ClusterRole\n  name: pod-reader # this must match the name of the Role or ClusterRole you wish to bind to\n  apiGroup: rbac.authorization.k8s.io");
+       createDescription($_, "kubectl create rolebinding <role-binding-name>", "apiVersion: rbac.authorization.k8s.io/v1\nkind: RoleBinding\nmetadata:\n  name: read-pods\n  namespace: default\nsubjects:\n- kind: User\n  name: jane # Name is case sensitive\n  apiGroup: rbac.authorization.k8s.io\nroleRef:\n  kind: Role #this must be Role or ClusterRole\n  name: pod-reader # this must match the name of the Role or ClusterRole you wish to bind to\n  apiGroup: rbac.authorization.k8s.io");
    }
    when ($_ eq "secret" || $_ eq "secrets"){
        sayColor('bold red', "Encode text before creating secret:");
@@ -81,7 +81,7 @@ given ($object) {
        createDescription($_, "kubectl create secret", "apiVersion: v1\nkind: Secret\nmetadata:\n  name: mysecret\ntype: Opaque\ndata:\n  username: YWRtaW4=\n  password: MWYyZDFlMmU2N2Rm");
    }
    when ($_ eq "serviceaccount" || $_ eq "serviceaccounts"){
-       createDescription($_, "kubectl create serviceaccount", "apiVersion: v1\nkind: ServiceAccount\nmetadata:\n  creationTimestamp: 2015-08-07T22:02:39Z\n  name: default\n  namespace: default\n  uid: 052fb0f4-3d50-11e5-b066-42010af0d7b6\nsecrets:\n- name: default-token-uudge\nimagePullSecrets:\n- name: myregistrykey");
+       createDescription($_, "kubectl create serviceaccount <service-account-name>", "apiVersion: v1\nkind: ServiceAccount\nmetadata:\n  creationTimestamp: 2015-08-07T22:02:39Z\n  name: default\n  namespace: default\n  uid: 052fb0f4-3d50-11e5-b066-42010af0d7b6\nsecrets:\n- name: default-token-uudge\nimagePullSecrets:\n- name: myregistrykey");
    }
    when ($_ eq "networkpolicy" || $_ eq "networkpolicies"){
        createDescription($_, "kubectl create -f tmp.yml", "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: test-network-policy\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      role: db\n  policyTypes:\n  - Ingress\n  - Egress\n  ingress:\n  - from:\n    - ipBlock:\n        cidr: 172.17.0.0/16\n        except:\n        - 172.17.1.0/24\n    - namespaceSelector:\n        matchLabels:\n          project: myproject\n    - podSelector:\n        matchLabels:\n          role: frontend\n    ports:\n    - protocol: TCP\n      port: 6379\n  egress:\n  - to:\n    - ipBlock:\n        cidr: 10.0.0.0/24\n    ports:\n    - protocol: TCP\n      port: 5978");
