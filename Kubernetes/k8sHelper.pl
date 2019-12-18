@@ -25,7 +25,7 @@ sub sayColor {
 }
 
 given ($object) {
-   when ($_ eq "pod") {
+   when ($_ eq "pod" || $_ eq "pods") {
        createDescription($_, "kubectl run --generator=run-pod/v1 nginx-pod --image=nginx:alpine -l nginxLabel=asdasd\n", "apiVersion: v1 \nkind: Pod \nmetadata:\n  name: nginx-pod\nspec:\n  containers:\n  - name: nginx-container\n    image: nginx:alpine\n" );
    }
    when ($_ eq "service") {
@@ -88,8 +88,8 @@ given ($object) {
    }
    default {
        sayColor('bold red', "No information on object $_ !!");
-       say "Use the ";
+       print "Use the command: ";
        sayColor('bold green', "kubectl api-resources ");
-       say "command, to list all the possible resource types, and copy the NAME of the resource you want information on, to create that resource type."
+       say "To list all the possible resource types, and copy the NAME of the resource you want information on, to create that resource type."
    }
 }
