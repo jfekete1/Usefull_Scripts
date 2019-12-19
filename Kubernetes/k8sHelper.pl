@@ -97,10 +97,32 @@ given ($object) {
    }
    when ($_ eq "taint" || $_ eq "taints"){
        createDescription($_, "kubectl taint node node01 \'app_type=alpha:NoSchedule\'", "");
+       sayColor('bold green', "Check if the taint is applied: ");
+       say "kubectl get nodes -o=jsonpath='{range .items[*]}{.metadata.name}{\"\t\"}{.spec.taints}{\"\n\"}{end}'";
    }
    when ($_ eq "explain" || $_ eq "help"){
        say "kubectl explain ingress --recursive | less";
        say "kubectl explain ingress --recursive | grep -i rules -A10";
+   }
+   when ($_ eq "taint" || $_ eq "taints"){
+       createDescription($_, "kubectl taint nodes node-name key=value:taint-effect", "");
+   }
+   when ($_ eq "toleration" || $_ eq "tolerations"){
+       sayColor('bold yellow', "Create the pod first like: ");
+       say "kubectl run alpha --generator=run-pod/v1 --image=redis --dry-run -o yaml > alpha-pod.yml";
+       sayColor('bold yellow', "Then edit the pod: ");
+       say "vi alpha-pod.yml \nspec:\n  tolerations:\n  - key: \"app_type\"\n    operator: \"Equal\"\n    value: \"alpha\"\n    operator: \"Equal\"\n    effect: \"NoSchedule\"";
+   }
+   when ($_ eq "label" || $_ eq "labels" || $_ eq "nodelabel" || $_ eq "labelnode"){
+       createDescription($_, "kubectl label nodes node02 app_type=beta", "check:\n  kubectl get nodes node02 --show-labels");
+   }
+   when ($_ eq "affinity" || $_ eq "setaffinity"){
+       sayColor('bold yellow', "Set affinity on Deployment pods: ");
+       say "kubectl run beta-apps --image=nginx --replicas=3 --dry-run -o yaml > beta.yml\nvi beta.yml";
+       say "spec:\n  affinity:\n    nodeAffinity:\n      requiredDuringSchedulingIgnoredDuringExecution:\n        nodeSelectorTerms:\n        - matchExpressions:\n          - key: app_type\n            operator: In\n            values:\n            - beta";
+   }
+   when ($_ eq "ingress") {
+       createDescription($_, "No imperative command available for this resource type !! \nkubectl explain ingress --recursive", "apiVersion: networking.k8s.io/v1beta1\nkind: Ingress\nmetadata:\n  name: test-ingress\n  annotations:\n    nginx.ingress.kubernetes.io/rewrite-target: /\nspec:\n  rules:\n  - http:\n      paths:\n      - path: /testpath\n        backend:\n          serviceName: test\n          servicePort: 80");
    }
    default {
        sayColor('bold red', "No information on object $_ !!");
