@@ -124,6 +124,9 @@ given ($object) {
    when ($_ eq "ingress") {
        createDescription($_, "No imperative command available for this resource type !! \nkubectl explain ingress --recursive", "apiVersion: networking.k8s.io/v1beta1\nkind: Ingress\nmetadata:\n  name: test-ingress\n  annotations:\n    nginx.ingress.kubernetes.io/rewrite-target: /\nspec:\n  rules:\n  - http:\n      paths:\n      - path: /testpath\n        backend:\n          serviceName: test\n          servicePort: 80");
    }
+   when ($_ eq "readinessprobe"){
+       createDescription($_, "No imperative command available for this resource type !! \nkubectl explain pod --recursive | grep -i readiness -A10", "apiVersion: v1\nkind: Pod\nmetadata:\n  name: goproxy\n  labels:\n    app: goproxy\nspec:\n  containers:\n  - name: goproxy\n    image: k8s.gcr.io/goproxy:0.1\n    ports:\n    - containerPort: 8080\n    readinessProbe:\n      tcpSocket:\n        port: 8080\n      initialDelaySeconds: 5\n      periodSeconds: 10");
+   }
    default {
        sayColor('bold red', "No information on object $_ !!");
        print "Use the command: ";
