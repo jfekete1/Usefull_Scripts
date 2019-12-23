@@ -40,6 +40,7 @@ foreach my $searchedLine (@searchLns) {
   print reverse(@parentsArray);
   print $linesArray[$initialIndex];
   @parentsArray = ();
+  say "\n";
 }
 
 sub getParentsRecursively {
