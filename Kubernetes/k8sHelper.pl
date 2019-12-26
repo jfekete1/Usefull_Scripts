@@ -111,7 +111,7 @@ given ($object) {
        sayColor('bold yellow', "Create the pod first like: ");
        say "kubectl run alpha --generator=run-pod/v1 --image=redis --dry-run -o yaml > alpha-pod.yml";
        sayColor('bold yellow', "Then edit the pod: ");
-       say "vi alpha-pod.yml \nspec:\n  tolerations:\n  - key: \"app_type\"\n    operator: \"Equal\"\n    value: \"alpha\"\n    operator: \"Equal\"\n    effect: \"NoSchedule\"";
+       say "vi alpha-pod.yml \nspec:\n  tolerations:\n  - key: \"app_type\"\n    operator: \"Equal\"\n    value: \"alpha\"\n    effect: \"NoSchedule\"";
    }
    when ($_ eq "label" || $_ eq "labels" || $_ eq "nodelabel" || $_ eq "labelnode"){
        createDescription($_, "kubectl label nodes node02 app_type=beta", "check:\n  kubectl get nodes node02 --show-labels");
