@@ -31,6 +31,7 @@ sub getLeadingSpaces {
 }
 
 my $searchedLines = `grep -nw $searchString $file`;
+if($searchedLines eq ""){say "Use plural form instead of singular !! For example \"volumes\" instead of \"volume\"";}
 my @searchLns = split(/\n/, $searchedLines);
 
 foreach my $searchedLine (@searchLns) {
