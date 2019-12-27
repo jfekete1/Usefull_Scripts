@@ -31,7 +31,7 @@ sub getLeadingSpaces {
 }
 
 my $searchedLines = `grep -nw $searchString $file`;
-if($searchedLines eq ""){say "Use plural form instead of singular !! For example \"volumes\" instead of \"volume\"";}
+if($searchedLines eq ""){say "Use plural form instead of singular !! For example \"volumes\" instead of \"volume\". Remember, that you can pass empty Objects in yaml file like:\nvolumes:\n- name: cache-volume\n  emptyDir: {}";}
 my @searchLns = split(/\n/, $searchedLines);
 
 foreach my $searchedLine (@searchLns) {
