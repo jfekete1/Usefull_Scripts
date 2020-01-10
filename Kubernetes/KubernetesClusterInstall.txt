@@ -17,7 +17,8 @@ EOF
 
 yum clean all
 yum update
-yum install -y docker kubelet kubeadm kubectl kubenetes-cni
+yum install -y docker
+yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
 
 systemctl enable docker && systemctl start docker
 systemctl enable kubelet && systemctl start kubelet
