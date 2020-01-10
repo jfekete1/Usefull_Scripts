@@ -15,6 +15,8 @@ gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
        https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 EOF
 
+yum clean all
+yum update
 yum install -y docker kubelet kubeadm kubectl kubenetes-cni
 
 systemctl enable docker && systemctl start docker
