@@ -15,7 +15,7 @@ gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
        https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 EOF
 VAGY
-cat < /etc/yum.repos.d/kubernetes.repo
+cat <<EOF > /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
 baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
@@ -45,8 +45,6 @@ vi /etc/hosts
 192.168.0.122 master
 192.168.0.123 node01
 
-kubeadm init
-vagy
 kubeadm init --pod-network-cidr=10.244.0.0/16 ???
 
 export KUBECONFIG=/etc/kubernetes/admin.conf
