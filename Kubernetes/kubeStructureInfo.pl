@@ -14,6 +14,9 @@ my $currentIndex = 0;
 my $initialIndex = 0;
 my $initialSpaceCount = 0;
 
+`echo "set expandtab" > ~/.vimrc`;
+`echo "set shiftwidth=8" >> ~/.vimrc`;
+
 open my $info, $file or die "Could not open $file: $!";
 
 while( my $line = <$info>)  {   
