@@ -102,7 +102,10 @@ sudo curl -L https://github.com/argoproj/argo-cd/releases/download/$ARGOCD_VERSI
 sudo chmod +x /usr/local/bin/argocd
 
 --SETUP ARGOCD
+MUSZÁJ KIADNI MINDKÉT NOHUPOS PARANCSOT, HOGY MŰKÖDJÖN !!
+nohup kubectl port-forward svc/argocd-server -n argocd 8080:443
 nohup kubectl port-forward svc/argocd-server -n argocd 8080:443 &
+
 kubectl get pods -n argocd -l app.kubernetes.io/name=argocd-server -o name | cut -d'/' -f 2
 argocd login --insecure localhost:8080
 
