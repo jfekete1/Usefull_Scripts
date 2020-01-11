@@ -47,7 +47,7 @@ vi /etc/hosts
 
 kubeadm init --pod-network-cidr=10.244.0.0/16
 put join token into jointoken.txt file
-scp jointoken.txt osboxes@node01:/home/osboxes/Usefull_scripts/Kubernetes
+scp jointoken.txt osboxes@node01:/home/osboxes
 
 export KUBECONFIG=/etc/kubernetes/admin.conf
 kubectl get po -n kube-system
