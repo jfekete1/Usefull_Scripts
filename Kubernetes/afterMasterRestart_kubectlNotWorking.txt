@@ -17,8 +17,13 @@ vi controller-manager.conf
 change server: https://192.168...
 vi kubelet.conf
 change server: https://192.168...
-vi scheduler.conf
-change server: https://192.168...
+
+ÚJRA KELL GENERÁLNI A KULCSOKAT !!
+kubeadm token create --help
+kubeadm init phase upload-certs --upload-certs
+
+
+
 
 cd manifests
 vi etcd.yaml
