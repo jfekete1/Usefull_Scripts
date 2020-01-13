@@ -1,1 +1,12 @@
+ON MASTER:
 export KUBECONFIG=/etc/kubernetes/kubelet.conf
+ping node01
+
+ON NODES:
+#make sure you can reach the master
+ping master
+kubeadm reset
+rm -rf /etc/cni/net.d/
+rm -rf /etc/kubernetes
+#use join token, to join the cluster
+kubeadm join master:6443 --token ... --discovery-token-ca-cert-hash ...
