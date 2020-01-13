@@ -1,0 +1,65 @@
+Install flux
+https://kodekloud.com/courses/kubernetes-certification-course-labs/lectures/12039471
+    1  cd .ssh/
+    2  ll
+    3  cat id_rsa
+    4  mv id_rsa id_rsaOld
+    5  vi id_rsa
+    6  chmod 400 id_rsa
+    7  ssh -T -ai ~/.ssh/id_rsa git@github.com
+    8  cd ..
+    9  git clone git@github.com:jfekete1/gitops-tutorial.git
+   10  cd gitops-tutorial/
+   11  kubectl apply -f ./flux/
+   12  kubectl get pods
+   13  wget https://github.com/weaveworks/flux/releases/download/1.8.1/fluxctl_linux_amd64
+   14  chmod +x fluxctl_linux_amd64
+   15  ./fluxctl_linux_amd64 identity
+add key to github repository !!!
+   16  vi flux/flux-deployment.yaml
+/git
+nnnnnnnnn
+- --git-url=git@github.com:jfekete1/gitops-tutorial.git
+- --git-path=deploy/kubernetes
+:wq
+   17  kubectl apply -f flux/flux-deployment.yaml
+   18  kubectl get pods
+   19  kubectl run webapp --image=nginx --replicas=1 --dry-run -o yaml > my-webapp.yml
+   20  kubectl create -f my-webapp.yml
+   21  kubectl expose deployment my-webapp --type=NodePort --port=80 --dry-run -o yaml > webapp-svc.yml
+   22  vi webapp-svc.yml
+nodePort=31111
+   23  kubectl delete deployments. webapp
+   24  kubectl get pods
+   25  mv webapp.yml deploy/kubernetes/
+   26  mv webapp-svc.yml deploy/kubernetes/
+   27  ll deploy/kubernetes/
+   28  git add deploy/
+   29  git config --global user.email "fekete.jozsef@protonmail.com"
+   30  git commit -m "Add new deployment webapp"
+   31  git push origin master
+   32  watch kubectl get pods
+   33  kubectl delete deploy/podinfo
+   34  watch kubectl get pods
+   35  ll deploy/kubernetes/
+
+Automate Application version ugrade:
+   36  vi deploy/kubernetes/podinfo-dep.yaml
+metadata:
+  name: podinfo
+  annotations:
+    flux.weave.works/tag.podinfo: glob:*
+    flux.weave.works/automated: 'true'
+   37  git add deploy/
+   38  git commit -m "add auto deployment"
+   39  git push origin master
+   40  watch kubectl get deployment podinfo -o jsonpath='{..spec.template.spec.containers[0].image}'
+
+   41  kubectl expose deployment podinfo --type=NodePort --port=9898 --dry-run -o yaml > podinfo-svc.yml
+   42  vi podinfo-svc.yml
+nodePort: 30001
+   43  mv podinfo-svc.yml deploy/kubernetes/
+   44  git add deploy/
+   45  git commit -m "Expose podinfo on node"
+   46  git push origin master
+   47  fluxctl sync
