@@ -5,6 +5,36 @@ ping node01
 ON NODES:
 #make sure you can reach the master
 ping master
+You do not want to use kubeadm reset. That will reset everything and you would have to start configuring your cluster again.
+
+Well, in your scenario, please have a look on the steps below:
+
+nano /etc/hosts (update your new IP against YOUR_HOSTNAME)
+nano /etc/kubernetes/config (configuration settings related to your cluster) here in this file look for the following params and update accordingly
+
+KUBE_MASTER="--master=http://YOUR_HOSTNAME:8080"
+
+KUBE_ETCD_SERVERS="--etcd-servers=http://YOUR_HOSTNAME:2379" #2379 is default port
+
+nano /etc/etcd/etcd.conf (conf related to etcd)
+
+KUBE_ETCD_SERVERS="--etcd-servers=http://YOUR_HOSTNAME/WHERE_EVER_ETCD_HOSTED:2379"
+
+2379 is default port for etcd. and you can have multiple etcd servers defined here comma separated
+
+Restart kubelet, apiserver, etcd services.
+
+It is good to use hostname instead of IP to avoid such scenarios.
+
+Hope it helps!
+
+
+
+
+
+
+
+Otherwise...
 kubeadm reset
 rm -rf /etc/cni/net.d/
 rm -rf /etc/kubernetes
