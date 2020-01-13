@@ -12,6 +12,27 @@ Well, in your scenario, please have a look on the steps below:
 nano /etc/hosts (update your new IP against YOUR_HOSTNAME)
 vi $KUBECONFIG
 change server: https://192.168...
+cd /etc/kubernetes
+vi controller-manager.conf
+change server: https://192.168...
+vi kubelet.conf
+change server: https://192.168...
+vi scheduler.conf
+change server: https://192.168...
+
+cd manifests
+vi etcd.yaml
+:%s/search_string/replacement_string/g
+pl.
+:%s/120/210/g
+vi kube-apiserver.yaml
+:%s/120/210/g
+vi kube-controller-manager.yaml
+:%s/120/210/g
+vi kube-scheduler.yaml
+:%s/120/210/g
+
+
 
 KUBE_MASTER="--master=http://YOUR_HOSTNAME:8080"
 
