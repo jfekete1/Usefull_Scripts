@@ -10,7 +10,8 @@ You do not want to use kubeadm reset. That will reset everything and you would h
 Well, in your scenario, please have a look on the steps below:
 
 nano /etc/hosts (update your new IP against YOUR_HOSTNAME)
-nano /etc/kubernetes/config (configuration settings related to your cluster) here in this file look for the following params and update accordingly
+vi $KUBECONFIG
+change server: https://192.168...
 
 KUBE_MASTER="--master=http://YOUR_HOSTNAME:8080"
 
