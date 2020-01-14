@@ -2,6 +2,9 @@ ON MASTER:
 export KUBECONFIG=/etc/kubernetes/kubelet.conf
 ping node01
 
+View Certificates:
+openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text -noout
+
 ON NODES:
 #make sure you can reach the master
 ping master
