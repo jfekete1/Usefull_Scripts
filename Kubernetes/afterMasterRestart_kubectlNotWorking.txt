@@ -22,7 +22,7 @@ systemctl start docker
 
 # reinit master with data in etcd
 # add --kubernetes-version, --pod-network-cidr and --token options if needed
-kubeadm init --ignore-preflight-errors=DirAvailable--var-lib-etcd
+kubeadm init --ignore-preflight-errors=DirAvailable--var-lib-etcd --pod-network-cidr=10.244.0.0/16
 
 # update kubectl config
 cp kubernetes/admin.conf ~/.kube/config
