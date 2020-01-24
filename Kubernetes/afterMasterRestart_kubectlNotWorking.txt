@@ -105,3 +105,57 @@ rm -rf /etc/cni/net.d/
 rm -rf /etc/kubernetes
 #use join token, to join the cluster
 kubeadm join master:6443 --token ... --discovery-token-ca-cert-hash ...
+
+
+
+
+scriptbe kell majd:
+oldip=192.168.0.124
+newip=192.168.3.167
+cd /etc/kubernetes
+# see before
+find . -type f | xargs grep $oldip
+# modify files in place
+find . -type f | xargs sed -i "s/$oldip/$newip/"
+# see after
+find . -type f | xargs grep $newip
+
+mkdir ~/k8s-old-pki
+cp -Rvf /etc/kubernetes/pki/* ~/k8s-old-pki
+
+cd /etc/kubernetes/pki
+for f in $(find -name "*.crt"); do 
+  openssl x509 -in $f -text -noout > $f.txt;
+done
+grep -Rl $oldip .
+for f in $(find -name "*.crt"); do rm $f.txt; done
+
+# find all the config map names
+configmaps=$(kubectl -n kube-system get cm -o name | \
+  awk '{print $1}' | \
+  cut -d '/' -f 2)
+
+# fetch all for filename reference
+dir=$(mktemp -d)
+for cf in $configmaps; do
+  kubectl -n kube-system get cm $cf -o yaml > $dir/$cf.yaml
+done
+
+# have grep help you find the files to edit, and where
+grep -Hn $dir/* -e $oldip
+
+# edit those files, in my case, grep only returned these two:
+kubectl -n kube-system edit cm kubeadm-config
+kubectl -n kube-system edit cm kube-proxy
+
+vi /etc/hosts
+
+rm apiserver.crt apiserver.key
+kubeadm alpha phase certs apiserver
+rm etcd/peer.crt etcd/peer.key
+kubeadm alpha phase certs etcd-peer
+
+sudo systemctl restart kubelet
+sudo systemctl restart docker
+
+sudo cp /etc/kubernetes/admin.conf $HOME/.kube/config
