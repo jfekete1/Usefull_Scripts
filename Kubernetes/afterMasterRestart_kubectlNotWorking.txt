@@ -193,3 +193,18 @@ kubectl delete node $(kubectl get nodes -o jsonpath='{.items[?(@.status.conditio
 
 # check running pods
 kubectl get pods --all-namespaces
+
+########################################################################
+ON NODE01
+vi /etc/hosts (also edit hosts file on master again!!)
+systemctl stop kubelet
+systemctl stop docker
+systemctl start docker
+
+ON MASTER:
+vi /etc/hosts
+scp jointoken osboxes@node01:/home/osboxes
+
+ON NODE01:
+cat /home/osboxes/jointoken
+use command to join !!!!
