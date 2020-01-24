@@ -208,3 +208,12 @@ scp jointoken osboxes@node01:/home/osboxes
 ON NODE01:
 cat /home/osboxes/jointoken
 use command to join !!!!
+
+
+change argocd password to asdasd:
+kubectl -n argocd patch secret argocd-secret \
+  -p '{"stringData": {
+    "admin.password": "$2a$10$qsixbgmq1EO1yUgZAzH.6OTFn9XzfF7wwj/BO.xbRbU0CxuogVWBy",
+    "admin.passwordMtime": "'$(date +%FT%T%Z)'"
+  }}'
+
