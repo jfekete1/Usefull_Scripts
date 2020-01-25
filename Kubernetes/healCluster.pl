@@ -1,7 +1,9 @@
 #!/usr/bin/perl
-my $IP = `ip addr | grep enp0s3 | grep inet | awk \'{print \$2}\' | cut -d \"/\" -f 1`;
+my $nodeIP   = $ARGV[0]
+my $masterIP = `ip addr | grep enp0s3 | grep inet | awk \'{print \$2}\' | cut -d \"/\" -f 1`;
 
-`sed -r \"s/^ *[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+( +master)/$IP\1/\"`;
+`sed -r \"s/^ *[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+( +master)/$masterIP\1/\"`;
+`sed -r \"s/^ *[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+( +node01)/$nodeIP\1/\"`;
 `systemctl stop kubelet docker`;
 
 # backup old kubernetes data
@@ -17,8 +19,8 @@ my $IP = `ip addr | grep enp0s3 | grep inet | awk \'{print \$2}\' | cut -d \"/\"
 
 # reinit master with data in etcd
 # add --kubernetes-version, --pod-network-cidr and --token options if needed
-`kubeadm init --ignore-preflight-errors=DirAvailable--var-lib-etcd --pod-network-cidr=10.244.0.0/16`;
-#TODO SAVE JOINTOKEN !!!
+`kubeadm init --ignore-preflight-errors=DirAvailable--var-lib-etcd --pod-network-cidr=10.244.0.0/16 > output.txt`;
+my $joincmd = `cat output.txt | grep "kubeadm join" -A1`;
 
 # update kubectl config
 `cp /etc/kubernetes/admin.conf ~/.kube/config`;
@@ -36,11 +38,10 @@ ON NODE01
 my $username = 'osboxes';
 my $password = 'osboxes.org';
 #TODO GET IP FOR node01
-my $host = 'IP OF NODE01 NEEDED!!';
-my $ssh = Net::SSH::Perl->new($host);
+my $ssh = Net::SSH::Perl->new($nodeIP);
 $ssh->login($username, $password);
 
-my $chHostfile = "sed -r \"s/^ *[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+( +master)/$IP\1/\"";
+my $chHostfile = "sed -r \"s/^ *[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+( +master)/$masterIP\1/\"";
 my ($stdout,$stderr) = $ssh->cmd("$chHostfile");
 my $cmdForIP2 = "ip addr | grep enp0s3 | grep inet | awk \'{print \$2}\' | cut -d \"/\" -f 1";
 my $IP2 = $ssh->cmd("$cmdForIP2");
@@ -51,11 +52,6 @@ my ($stdout,$stderr) = $ssh->cmd("$chHostfile");
 ($stdout,$stderr) = $ssh->cmd("systemctl stop docker");
 ($stdout,$stderr) = $ssh->cmd("systemctl start docker");
 
-#TODO befejezni
-ON MASTER:
-vi /etc/hosts
-scp jointoken osboxes@node01:/home/osboxes
-
 ON NODE01:
-cat /home/osboxes/jointoken
-use command to join !!!!
+($stdout,$stderr) = $ssh->cmd("$joincmd");
+print($stdout, $stderr);
