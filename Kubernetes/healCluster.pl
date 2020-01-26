@@ -1,14 +1,18 @@
 #!/usr/bin/perl
 use Net::SSH::Perl;
-
-#curl -L http://cpanmin.us | perl - --sudo App::cpanminus
-#cpanm Net::SSH::Perl
-#date --set="2 OCT 2006 18:00:00"
+use Config::Hosts;
+ 
 my $nodeIP   = $ARGV[0];
 my $masterIP = `ip addr | grep enp0s3 | grep inet | awk \'{print \$2}\' | cut -d \"/\" -f 1`;
 
-`sed -r \"s/^\\s*[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(\\s+master)/$masterIP\\1/\"`;
-`sed -r \"s/^\\s*[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(\\s+node01)/$nodeIP\\1/\"`;
+my $hosts = Config::Hosts->new();
+    $hosts->read_hosts(); # reads default /etc/hosts
+    $hosts->delete_host('master');
+    $hosts->delete_host('node01');
+    $hosts->insert_host(ip => $masterIP, hosts => [qw(master)]);
+    $hosts->insert_host(ip => $nodeIP, hosts => [qw(node01)]);
+    $hosts->write_hosts("/etc/hosts");
+
 `systemctl stop kubelet docker`;
 
 # backup old kubernetes data
@@ -58,3 +62,7 @@ my ($stdout,$stderr) = $ssh->cmd("$chHostfile");
 
 ($stdout,$stderr) = $ssh->cmd("$joincmd");
 print($stdout, $stderr);
+
+#curl -L http://cpanmin.us | perl - --sudo App::cpanminus
+#cpanm Net::SSH::Perl
+#date --set="2 OCT 2006 18:00:00"
