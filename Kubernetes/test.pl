@@ -4,7 +4,7 @@ use Config::Hosts;
  
 my $hosts = Config::Hosts->new();
     $hosts->read_hosts(); # reads default /etc/hosts
-    $hosts->update_host("192.168.123.123", hosts=> [qw(node01)])
+    $hosts->update_host("192.168.123.123", hosts=> [qw(node01)]);
     $hosts->write_hosts("/tmp/hosts");
     
 my $nodeIP='192.168.0.129';
