@@ -4,12 +4,13 @@ use Config::Hosts;
  
 my $nodeIP   = $ARGV[0];
 my $masterIP = `ip addr | grep enp0s3 | grep inet | awk \'{print \$2}\' | cut -d \"/\" -f 1`;
+chomp $masterIP;
 
 my $hosts = Config::Hosts->new();
     $hosts->read_hosts(); # reads default /etc/hosts
     $hosts->delete_host('master');
-    $hosts->delete_host('node01');
     $hosts->insert_host(ip => $masterIP, hosts => [qw(master)]);
+    $hosts->delete_host('node01');
     $hosts->insert_host(ip => $nodeIP, hosts => [qw(node01)]);
     $hosts->write_hosts("/etc/hosts");
 
