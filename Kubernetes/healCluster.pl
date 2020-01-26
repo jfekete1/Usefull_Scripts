@@ -39,7 +39,7 @@ sleep 120
 `kubectl get pods --all-namespaces`;
 
 ########################################################################
-ON NODE01
+#ON NODE01
 my $username = 'osboxes';
 my $password = 'osboxes.org';
 #TODO GET IP FOR node01
@@ -57,6 +57,5 @@ my ($stdout,$stderr) = $ssh->cmd("$chHostfile");
 ($stdout,$stderr) = $ssh->cmd("systemctl stop docker");
 ($stdout,$stderr) = $ssh->cmd("systemctl start docker");
 
-ON NODE01:
 ($stdout,$stderr) = $ssh->cmd("$joincmd");
 print($stdout, $stderr);
