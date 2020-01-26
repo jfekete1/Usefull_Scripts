@@ -1,4 +1,7 @@
 #!/usr/bin/perl
+
+#curl -L http://cpanmin.us | perl - --sudo App::cpanminus
+#cpanm Net::SSH::Perl
 my $nodeIP   = $ARGV[0]
 my $masterIP = `ip addr | grep enp0s3 | grep inet | awk \'{print \$2}\' | cut -d \"/\" -f 1`;
 
