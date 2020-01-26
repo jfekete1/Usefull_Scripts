@@ -4,7 +4,7 @@ use Net::SSH::Perl;
 #curl -L http://cpanmin.us | perl - --sudo App::cpanminus
 #cpanm Net::SSH::Perl
 #date --set="2 OCT 2006 18:00:00"
-my $nodeIP   = $ARGV[0]
+my $nodeIP   = $ARGV[0];
 my $masterIP = `ip addr | grep enp0s3 | grep inet | awk \'{print \$2}\' | cut -d \"/\" -f 1`;
 
 `sed -r \"s/^ *[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+( +master)/$masterIP\1/\"`;
@@ -31,7 +31,6 @@ my $joincmd = `cat output.txt | grep "kubeadm join" -A1`;
 `cp /etc/kubernetes/admin.conf ~/.kube/config`;
 
 # wait for some time and delete old node
-sleep 120
 `kubectl get nodes --sort-by=.metadata.creationTimestamp`;
 `kubectl delete node \$(kubectl get nodes -o jsonpath=\'{.items[?(\@.status.conditions[0].status==\"Unknown\")].metadata.name}\')`;
 
