@@ -13,25 +13,38 @@ my $hosts = Config::Hosts->new();
     $hosts->insert_host(ip => $nodeIP, hosts => [qw(node01)]);
     $hosts->write_hosts("/etc/hosts");
 
-`systemctl stop kubelet docker`;
+print "Stopping Docker... \n";
+my $cmdOut = `systemctl stop kubelet docker`;
+print $cmdOut;
+print "\n";
 
-# backup old kubernetes data
-`mv /etc/kubernetes /etc/kubernetes-backup`;
-`mv /var/lib/kubelet /var/lib/kubelet-backup`;
+print "backup old kubernetes data... \n";
+$cmdOut = `mv /etc/kubernetes /etc/kubernetes-backup`;
+print $cmdOut;
+print "\n";
+my $cmdOut = `mv /var/lib/kubelet /var/lib/kubelet-backup`;
+print $cmdOut;
+print "\n";
 
-# restore certificates
-`mkdir -p /etc/kubernetes`;
-`cp -r /etc/kubernetes-backup/pki /etc/kubernetes`;
-`rm /etc/kubernetes/pki/{apiserver.*,etcd/peer.*}`;
+print "restore certificates... \n";
+$cmdOut = `mkdir -p /etc/kubernetes`;
+print "" . $cmdOut . "\n";
+$cmdOut = `cp -r /etc/kubernetes-backup/pki /etc/kubernetes`;
+print "" . $cmdOut . "\n";
+$cmdOut = `rm /etc/kubernetes/pki/{apiserver.*,etcd/peer.*}`;
+print "" . $cmdOut . "\n";
 
-`systemctl start docker`;
+$cmdOut = `systemctl start docker`;
+print "" . $cmdOut . "\n";
 
-# reinit master with data in etcd
+print "reinit master with data in etcd... \n";
 # add --kubernetes-version, --pod-network-cidr and --token options if needed
 `kubeadm init --ignore-preflight-errors=DirAvailable--var-lib-etcd --pod-network-cidr=10.244.0.0/16 > output.txt`;
 my $joincmd = `cat output.txt | grep "kubeadm join" -A1`;
+print $joincmd;
+print "\n";
 
-# update kubectl config
+print "update kubectl config... \n";
 `cp /etc/kubernetes/admin.conf ~/.kube/config`;
 
 # wait for some time and delete old node
