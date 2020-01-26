@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+use Net::SSH::Perl;
 
 #curl -L http://cpanmin.us | perl - --sudo App::cpanminus
 #cpanm Net::SSH::Perl
