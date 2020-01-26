@@ -7,8 +7,8 @@ use Net::SSH::Perl;
 my $nodeIP   = $ARGV[0];
 my $masterIP = `ip addr | grep enp0s3 | grep inet | awk \'{print \$2}\' | cut -d \"/\" -f 1`;
 
-`sed -r \"s/^ *[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+( +master)/$masterIP\1/\"`;
-`sed -r \"s/^ *[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+( +node01)/$nodeIP\1/\"`;
+`sed -r \"s/^ *[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+( +master)/$masterIP\\1/\"`;
+`sed -r \"s/^ *[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+( +node01)/$nodeIP\\1/\"`;
 `systemctl stop kubelet docker`;
 
 # backup old kubernetes data
@@ -45,11 +45,11 @@ my $password = 'osboxes.org';
 my $ssh = Net::SSH::Perl->new($nodeIP);
 $ssh->login($username, $password);
 
-my $chHostfile = "sed -r \"s/^ *[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+( +master)/$masterIP\1/\"";
+my $chHostfile = "sed -r \"s/^ *[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+( +master)/$masterIP\\1/\"";
 my ($stdout,$stderr) = $ssh->cmd("$chHostfile");
 my $cmdForIP2 = "ip addr | grep enp0s3 | grep inet | awk \'{print \$2}\' | cut -d \"/\" -f 1";
 my $IP2 = $ssh->cmd("$cmdForIP2");
-$chHostfile = "sed -r \"s/^ *[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+( +node01)/$IP2\1/\"";
+$chHostfile = "sed -r \"s/^ *[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+( +node01)/$IP2\\1/\"";
 my ($stdout,$stderr) = $ssh->cmd("$chHostfile");
 
 ($stdout,$stderr) = $ssh->cmd("systemctl stop kubelet");
