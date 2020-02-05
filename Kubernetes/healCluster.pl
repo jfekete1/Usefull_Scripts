@@ -2,8 +2,9 @@
 use Net::SSH::Perl;
 use Config::Hosts;
  
-my $nodeIP   = $ARGV[0];
-my $masterIP = `ip addr | grep enp0s3 | grep inet | awk \'{print \$2}\' | cut -d \"/\" -f 1`;
+my $masterIP = $ARGV[0];
+my $nodeIP   = $ARGV[1];
+
 chomp $masterIP;
 
 my $hosts = Config::Hosts->new();
