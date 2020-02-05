@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-use Net::SSH::Perl;
+#use Net::SSH::Perl;
 use Config::Hosts;
  
 my $masterIP = $ARGV[0];
@@ -58,25 +58,25 @@ print "update kubectl config... \n";
 
 ########################################################################
 #ON NODE01
-my $username = 'osboxes';
-my $password = 'osboxes.org';
+#my $username = 'osboxes';
+#my $password = 'osboxes.org';
 #TODO GET IP FOR node01
-my $ssh = Net::SSH::Perl->new($nodeIP);
-$ssh->login($username, $password);
+#my $ssh = Net::SSH::Perl->new($nodeIP);
+#$ssh->login($username, $password);
 
-my $chHostfile = "sed -r \"s/^\\s*[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(\\s+master)/$masterIP\\1/\"";
-my ($stdout,$stderr) = $ssh->cmd("$chHostfile");
-my $cmdForIP2 = "ip addr | grep enp0s3 | grep inet | awk \'{print \$2}\' | cut -d \"/\" -f 1";
-my $IP2 = $ssh->cmd("$cmdForIP2");
-$chHostfile = "sed -r \"s/^\\s*[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(\\s+node01)/$IP2\\1/\"";
-my ($stdout,$stderr) = $ssh->cmd("$chHostfile");
+#my $chHostfile = "sed -r \"s/^\\s*[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(\\s+master)/$masterIP\\1/\"";
+#my ($stdout,$stderr) = $ssh->cmd("$chHostfile");
+#my $cmdForIP2 = "ip addr | grep enp0s3 | grep inet | awk \'{print \$2}\' | cut -d \"/\" -f 1";
+#my $IP2 = $ssh->cmd("$cmdForIP2");
+#$chHostfile = "sed -r \"s/^\\s*[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(\\s+node01)/$IP2\\1/\"";
+#my ($stdout,$stderr) = $ssh->cmd("$chHostfile");
 
-($stdout,$stderr) = $ssh->cmd("systemctl stop kubelet");
-($stdout,$stderr) = $ssh->cmd("systemctl stop docker");
-($stdout,$stderr) = $ssh->cmd("systemctl start docker");
+#($stdout,$stderr) = $ssh->cmd("systemctl stop kubelet");
+#($stdout,$stderr) = $ssh->cmd("systemctl stop docker");
+#($stdout,$stderr) = $ssh->cmd("systemctl start docker");
 
-($stdout,$stderr) = $ssh->cmd("$joincmd");
-print($stdout, $stderr);
+#($stdout,$stderr) = $ssh->cmd("$joincmd");
+#print($stdout, $stderr);
 
 #curl -L http://cpanmin.us | perl - --sudo App::cpanminus
 #cpanm Net::SSH::Perl
