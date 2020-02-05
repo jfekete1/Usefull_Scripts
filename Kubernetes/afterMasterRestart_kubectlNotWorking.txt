@@ -108,7 +108,10 @@ kubeadm join master:6443 --token ... --discovery-token-ca-cert-hash ...
 
 
 
-
+########################################################################################
+########################################################################################
+########################################################################################
+########################################################################################
 scriptbe kell majd:
 oldip=192.168.0.124
 newip=192.168.3.167
@@ -124,9 +127,7 @@ mkdir ~/k8s-old-pki
 cp -Rvf /etc/kubernetes/pki/* ~/k8s-old-pki
 
 cd /etc/kubernetes/pki
-for f in $(find -name "*.crt"); do 
-  openssl x509 -in $f -text -noout > $f.txt;
-done
+for f in $(find -name "*.crt"); do openssl x509 -in $f -text -noout > $f.txt; done
 grep -Rl $oldip .
 for f in $(find -name "*.crt"); do rm $f.txt; done
 
@@ -137,9 +138,7 @@ configmaps=$(kubectl -n kube-system get cm -o name | \
 
 # fetch all for filename reference
 dir=$(mktemp -d)
-for cf in $configmaps; do
-  kubectl -n kube-system get cm $cf -o yaml > $dir/$cf.yaml
-done
+for cf in $configmaps; do kubectl -n kube-system get cm $cf -o yaml > $dir/$cf.yaml; done
 
 # have grep help you find the files to edit, and where
 grep -Hn $dir/* -e $oldip
@@ -169,13 +168,13 @@ systemctl stop kubelet docker
 cd /etc/
 
 # backup old kubernetes data
-mv kubernetes kubernetes-backup
+mv /etc/kubernetes /etc/kubernetes-backup
 mv /var/lib/kubelet /var/lib/kubelet-backup
 
 # restore certificates
-mkdir -p kubernetes
-cp -r kubernetes-backup/pki kubernetes
-rm kubernetes/pki/{apiserver.*,etcd/peer.*}
+mkdir -p /etc/kubernetes
+cp -r /etc/kubernetes-backup/pki kubernetes
+rm /etc/kubernetes/pki/{apiserver.*,etcd/peer.*}
 
 systemctl start docker
 
@@ -184,7 +183,7 @@ systemctl start docker
 kubeadm init --ignore-preflight-errors=DirAvailable--var-lib-etcd
 
 # update kubectl config
-cp kubernetes/admin.conf ~/.kube/config
+cp /etc/kubernetes/admin.conf ~/.kube/config
 
 # wait for some time and delete old node
 sleep 120
