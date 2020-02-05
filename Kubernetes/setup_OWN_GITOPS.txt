@@ -1,0 +1,144 @@
+--COMMANDS:
+curl -L https://github.com/github/hub/releases/download/v2.12.8/hub-linux-amd64-2.12.8.tgz | tar zx
+
+sudo ./hub-linux-amd64-2.12.8/install
+
+hub version
+GITHUB_USERNAME=jfekete1
+git clone https://github.com/jfekete1/hello-gitops-app.git
+
+cd ~/hello-gitops-app && git remote set-url $GITHUB_USERNAME https://github.com/$GITHUB_USERNAME/hello-gitops-app.git
+
+cd
+
+git clone https://github.com/jfekete1/hello-gitops-env.git
+
+--CREATE DEPLOY KEY:
+cd && ssh-keygen -t rsa -m pem -f hello-gitops -N ""
+
+--START BUILDING:
+https://circleci.com
+Login with Github
+-> ADD PROJECTS
+-> Set Up Project
+(at hello-gitops-app)-> Start building
+
+https://circleci.com
+
+--BUILD SETTINGS
+-> Environment Variables
+-> Add Variable
+DOCKER_LOGIN=feketej
+DOCKER_PASSWORD=De.......
+GITHUB_USERNAME=jfekete1
+BUILD SETTINGS
+-> Advanced Settings
+-> Only build pull requests   [on]
+
+--ADD PUBLIC KEY:
+add public key to hello-gitops-env on github
+https://github.com
+hello-gitops-env
+-> Settings
+-> Deploy keys
+Title: forCircleCI
+Key:
+[✔︎]Allow write access
+Fill Key with contents of cat ~/hello-gitops.pub
+
+--ADD PRIVATE KEY
+add private key to hello-gitops-app on circleci
+https://circleci.com
+PERMISSIONS
+-> SSH Permissions
+-> Add SSH Key
+Hostname: github.com
+
+Private Key:
+Fill Private Key with contents of cat ~/hello-gitops
+
+--.circleci/config.yml
+FP=$(cd && ssh-keygen -E md5 -l -f hello-gitops.pub | cut -d" " -f2 | cut -d":" -f2-)
+echo $FP
+cd ~/hello-gitops-app && git checkout -b feature
+sed -i -e "s/_FINGERPRINTS_/$FP/g" ~/hello-gitops-app/.circleci/config.yml
+
+--commit in app repo
+cd ~/hello-gitops-app
+git config --global user.email "fekete.jozsef@protonmail.com"
+git config --global user.name "jfekete1"
+git config --global push.default simple
+git commit . -m "add key fingerprint of env repo"
+
+git push $GITHUB_USERNAME feature
+
+--PR TRIGGERS CI
+Create PR on app repo
+https://github.com
+
+Check CI
+Only build image for PR.
+
+--START K8S
+/root/.kube/start VAGY launch.sh
+
+--INSTALL ARGOCD
+Download install yaml for ArgoCD
+curl -L https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml > ~/argocd-install.yaml
+
+Install ArgoCD in k8s
+kubectl create namespace argocd
+kubectl apply -n argocd -f ~/argocd-install.yaml
+
+Install ArgoCD client
+ARGOCD_VERSION=$(cat ~/argocd-install.yaml | grep -m1 argoproj/argocd | cut -d ":" -f3)
+sudo curl -L https://github.com/argoproj/argo-cd/releases/download/$ARGOCD_VERSION/argocd-linux-amd64 -o /usr/local/bin/argocd
+sudo chmod +x /usr/local/bin/argocd
+
+--SETUP ARGOCD
+MUSZÁJ KIADNI MINDKÉT NOHUPOS PARANCSOT, HOGY MŰKÖDJÖN !!
+nohup kubectl port-forward svc/argocd-server -n argocd 8080:443
+nohup kubectl port-forward svc/argocd-server -n argocd 8080:443 &
+
+kubectl get pods -n argocd -l app.kubernetes.io/name=argocd-server -o name | cut -d'/' -f 2
+argocd login --insecure localhost:8080
+
+Username: admin
+Password:
+'admin' logged in successfully
+Context 'localhost:8080' updated
+
+--ADD ARGOCD APP
+ns=dev && kubectl create namespace $ns
+
+argocd repo add https://github.com/$GITHUB_USERNAME/hello-gitops-env.git
+
+argocd proj create $ns -d https://kubernetes.default.svc,$ns -s https://github.com/$GITHUB_USERNAME/hello-gitops-env.git
+
+argocd app create $ns-hello-gitops \
+  --repo https://github.com/$GITHUB_USERNAME/hello-gitops-env.git \
+  --path overlays/$ns \
+  --dest-server https://kubernetes.default.svc \
+  --project $ns \
+  --dest-namespace $ns \
+  --auto-prune \
+  --sync-policy automated
+
+--ACCESS ARGOCD GUI
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "NodePort"}}'
+
+kubectl get svc argocd-server -n argocd
+check port (31955)
+username: admin
+password: argocd-server-5d5994fff7-vtfmz (name of server pod)
+
+Select port to view on Host 1
+Display port Nodeport
+
+--MERGE TRIGGERS CD
+merge PR
+https://github.com
+
+check CI and CD
+https://circleci.com
+
