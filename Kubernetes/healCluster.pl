@@ -1,19 +1,13 @@
 #!/usr/bin/perl
 #use Net::SSH::Perl;
-#use Config::Hosts;
  
 my $masterIP = $ARGV[0];
 my $nodeIP   = $ARGV[1];
 
-#chomp $masterIP;
-
-#my $hosts = Config::Hosts->new();
-#    $hosts->read_hosts(); # reads default /etc/hosts
-#    $hosts->delete_host('master');
-#    $hosts->insert_host(ip => $masterIP, hosts => [qw(master)]);
-#    $hosts->delete_host('node01');
-#    $hosts->insert_host(ip => $nodeIP, hosts => [qw(node01)]);
-#    $hosts->write_hosts("/etc/hosts");
+my $newHosts = `cat /etc/hosts | sed -r \"s/^\\s*[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(\\s+master)/$masterIP\\1/\"`;
+`echo \"$newHosts\" > /etc/hosts`;
+$newHosts = `cat /etc/hosts | sed -r \"s/^\\s*[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(\\s+node01)/$nodeIP\\1/\"`;
+`echo \"$newHosts\" > /etc/hosts`;
 
 print "Stopping Docker... \n";
 my $cmdOut = `systemctl stop kubelet docker`;
