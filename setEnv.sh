@@ -6,3 +6,4 @@ curl $RAW_DEF/kubeStructureInfo.pl > k8help.pl
 chmod 777 k8help.pl
 kubectl explain $TMP_DEF --recursive > $TMP_YML
 cp k8help.pl /usr/local/bin/k8help.pl
+alias kcr="kubectl create -f"
