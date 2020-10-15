@@ -7,3 +7,6 @@ chmod 777 k8help.pl
 kubectl explain $TMP_DEF --recursive > $TMP_YML
 cp k8help.pl /usr/local/bin/k8help.pl
 alias kcr="kubectl create -f"
+alias secret="kubectl create secret generic mysql-pass --from-literal=password=admin --dry-run=client -o yaml > secret.yml"
+alias deployment="kubectl create deployment mysql --image=mysql:5.7 --dry-run=client -o yaml > deployment.yml"
+alias service="kubectl expose deployment webapp-deployment --name=webapp-service --target-port=8080 --type=NodePort --port=8080 --dry-run=client -o yaml > service-nodeport-webapp.yml"
