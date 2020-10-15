@@ -4,4 +4,4 @@ export TMP_DEF=${1:-deployment}
 curl $RAW_DEF/kubeStructureInfo.pl > help.pl
 chmod 777 help.pl
 kubectl explain $TMP_DEF --recursive > /tmp/tmp.yml
-cp help.pl /usr/local/bin/help
+cp help.pl /usr/local/bin/help.pl
