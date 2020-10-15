@@ -12,8 +12,8 @@ alias deployment="kubectl create deployment mysql --image=mysql:5.7 --dry-run -o
 cat > service_nodeport.sh <<EOF
 #!/bin/bash
 
-kubectl expose deployment $1 --name=$1 --target-port=8080 --type=NodePort --port=8080 --dry-run -o yaml > service-nodeport-$1.yml
-echo "Successfuly created service-nodeport-$1.yml file !!"
+kubectl expose deployment \$1 --name=\$1 --target-port=8080 --type=NodePort --port=8080 --dry-run -o yaml > service-nodeport-\$1.yml
+echo "Successfuly created service-nodeport-\$1.yml file !!"
 EOF
 chmod 777 service_nodeport.sh
 cp service_nodeport.sh /usr/local/bin/service_nodeport
