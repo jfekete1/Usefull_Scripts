@@ -5,8 +5,11 @@ kubectl expose deployment webapp-deployment --name=webapp-service --target-port=
 
 #DEFINITION FILES:
 https://raw.githubusercontent.com/jfekete1/Usefull_Scripts/master/Kubernetes/Definitions/pv-default.yaml
+
+#USEFULL COMMANDS:
 export RAW_DEF=https://raw.githubusercontent.com/jfekete1/Usefull_Scripts/master/Kubernetes/Definitions
 curl $RAW_DEF/pv-default.yaml > pv.yml
+kubectl explain deployment --recursive > tmp.yml
 
 #USEFULL INFOS:
 -Ingress is actually a routing framework for kubernetes (Like symfony router for laravel)
