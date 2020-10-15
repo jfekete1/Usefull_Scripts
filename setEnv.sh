@@ -10,3 +10,11 @@ alias kcr="kubectl create -f"
 alias secret="kubectl create secret generic mysql-pass --from-literal=password=admin --dry-run -o yaml > secret.yml"
 alias deployment="kubectl create deployment mysql --image=mysql:5.7 --dry-run -o yaml > deployment.yml"
 alias service_nodeport="while read line; do kubectl expose deployment $line --name=$line --target-port=8080 --type=NodePort --port=8080 --dry-run -o yaml > service-nodeport-webapp.yml; done"
+cat > service_nodeport.sh <<EOF
+#!/bin/bash
+
+kubectl expose deployment $1 --name=$1 --target-port=8080 --type=NodePort --port=8080 --dry-run -o yaml > service-nodeport-$1.yml
+echo "Successfuly created service-nodeport-$1.yml file !!"
+EOF
+chmod 777 service_nodeport.sh
+cp service_nodeport.sh /usr/local/bin/service_nodeport
