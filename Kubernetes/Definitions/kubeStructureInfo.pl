@@ -5,7 +5,7 @@ use 5.010;
 use Data::Dumper qw(Dumper);
 
 my $searchString = $ARGV[0];
-my $file = 'tmp.yml';
+my $file = '/tmp/tmp.yml';
 my @leadingSpaceArray;
 my @linesArray;
 my @parentsArray;
