@@ -3,4 +3,5 @@ export RAW_DEF=https://raw.githubusercontent.com/jfekete1/Usefull_Scripts/master
 export TMP_DEF=${1:-deployment}
 curl $RAW_DEF/kubeStructureInfo.pl > help.pl
 chmod 777 help.pl
-kubectl explain $TMP_DEF --recursive > tmp.yml
+kubectl explain $TMP_DEF --recursive > /tmp/tmp.yml
+cp help.pl /usr/local/bin/help
