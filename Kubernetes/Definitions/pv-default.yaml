@@ -3,6 +3,7 @@ kind: PersistentVolume
 metadata:
   name: pv-vol1
 spec:
+  storageClassName: standard
   accessModes:
     - ReadWriteMany
   capacity:
