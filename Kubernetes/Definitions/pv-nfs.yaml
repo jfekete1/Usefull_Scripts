@@ -3,6 +3,7 @@ kind: PersistentVolume
 metadata:
   name: pv-vol2
 spec:
+  storageClassName: standard
   capacity:
     storage: 1Gi
   accessModes:
