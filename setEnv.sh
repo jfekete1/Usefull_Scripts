@@ -11,7 +11,7 @@ alias kcr="kubectl create -f"
 alias secret="kubectl create secret generic mysql-pass --from-literal=password=admin --dry-run -o yaml > secret.yml"
 alias deployment="kubectl create deployment mysql --image=mysql:5.7 --dry-run -o yaml > deployment.yml"
 alias pod="kubectl run podname --image=nginx:alpine --dry-run=client -o yaml > pod.yml"
-alias debug="kubectl exec -it podname -- sh"
+alias debug="kubectl exec -it podname -- sh #---> nc -z -v -w 1 servicename 80 #---> ha operation timeout akkor kubectl get netpol"
 cat > service_nodeport.sh <<EOF
 #!/bin/bash
 
