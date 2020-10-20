@@ -9,3 +9,4 @@ spec:
     requests:
       storage: 1Gi
   volumeName: "pv-vol1"
+  storageClassName: standard
