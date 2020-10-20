@@ -10,6 +10,7 @@ cp k8help.pl /usr/local/bin/k8help.pl
 alias kcr="kubectl create -f"
 alias secret="kubectl create secret generic mysql-pass --from-literal=password=admin --dry-run -o yaml > secret.yml"
 alias deployment="kubectl create deployment mysql --image=mysql:5.7 --dry-run -o yaml > deployment.yml"
+alias pod="kubectl run podname --image=nginx:alpine --dry-run=client -o yaml > pod.yml"
 cat > service_nodeport.sh <<EOF
 #!/bin/bash
 
